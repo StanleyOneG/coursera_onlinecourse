@@ -104,7 +104,8 @@ class Enrollment(models.Model):
 class Question(models.Model):
     """Stores questions for courses"""
     # Foreign key to lesson
-    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, verbose_name='Lesson name')
+    course = models.ManyToManyField(Course)
     # question text
     question_text = models.TextField()
     # question grade/mark
@@ -141,14 +142,15 @@ class Question(models.Model):
 class Choice(models.Model):
     """Stores choises for questions"""
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    # lesson = models.ManyToManyField(Lesson)
     choice_content = models.TextField()
     CORRECT = 'Correct'
     INCORRECT = 'Incorrect'
-    CORRECT_OR_NOT = [
-        (CORRECT, 'Correct'),
-        (INCORRECT, 'Incorrect')
+    IS_CORRECT = [
+        (CORRECT, True),
+        (INCORRECT, False)
     ]
-    indicator = models.CharField(max_length=9, choices=CORRECT_OR_NOT)
+    is_correct = models.CharField(max_length=9, choices=IS_CORRECT)
 
 # <HINT> The submission model
 # One enrollment could have multiple submission
