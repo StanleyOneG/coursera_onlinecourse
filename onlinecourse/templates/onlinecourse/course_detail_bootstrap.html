@@ -60,14 +60,17 @@
 
         
 <!-- Collapse button  ##################################################################################### -->
-            <div class="card-body">
+            <div class="container-fluid d-grid gap-3">
                 {% if user.is_authenticated %}      
-                    <div class="card-body">
-                        <p>
-                            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#exam" aria-expanded="false" aria-controls="collapse">
-                                Click to expand questions
-                            </button>
-                        </p> 
+                <div class="container-fluid col-auto">
+                    <p>
+                        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#exam" aria-expanded="false" aria-controls="collapse">
+                            Click to expand questions
+                        </button>
+                    </p> 
+                    
+                </div>
+                <div class="container">
                         <form class="form-inline" id="questionform" action="{% url 'onlinecourse:submit' course.id %}" method="post">
                             {% csrf_token %}
                                 <div class="collapse" id="exam">

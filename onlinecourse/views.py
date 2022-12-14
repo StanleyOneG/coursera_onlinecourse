@@ -144,6 +144,7 @@ def show_exam_result(request, course_id, submission_id):
     context = {}
     submission = get_object_or_404(Submission, pk = submission_id)
     course = get_object_or_404(Course, pk = course_id)
+    questions = Question.objects.filter(course = course)
     choices = submission.choice.all()
     correct_answers = 0
     for choice in choices:
@@ -151,9 +152,10 @@ def show_exam_result(request, course_id, submission_id):
             correct_answers += 1
         else:
             correct_answers -= 1
-    max_possible_grade = sum([1 for x in choices if x.is_correct == 'True'])
+    max_possible_grade = sum([x.grade for x in questions])
+    # max_possible_grade = sum([1 for x in choices if x.is_correct == 'True'])
     grade = round(correct_answers / max_possible_grade * 100)
     context['course'] = course
-    context['selected_ids'] = [x.pk for x in choices]
+    context['selected_ids'] = choices
     context['grade'] = grade
     return render(request, 'onlinecourse/exam_result_bootstrap.html', context)

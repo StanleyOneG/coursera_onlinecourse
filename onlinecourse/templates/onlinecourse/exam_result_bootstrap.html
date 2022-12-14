@@ -57,6 +57,33 @@
         <div class="card-columns-vertical mt-1">
         <h5 class="">Exam results</h5>
             <!--HINT Display exam results-->
+            <div class="container-fluid">
+                <div class="card-header">
+                    {% for question in course.question_set.all %}
+                        <div class="card mt-1">
+                            <div 
+                                class="card-header">{{forloop.counter}}. <h6>{{question.question_text}}</h6>
+                            </div> 
+                            {% for choice in question.choice_set.all %}
+                                <div class="container-fluid">
+                                    {% if choice.is_correct == 'True' %}
+                                        {% if choice in selected_ids %}
+                                            <div class="text-success">Correct answer: {{choice.choice_content}}</div>
+                                        {% else %}
+                                            <div class="text-warning">Not selected: {{choice.choice_content}}</div>
+                                        {% endif %}
+                                    {% elif choice.is_correct != 'True' and choice in selected_ids %}
+                                        <div class="text-danger">Wrong: {{choice.choice_content}}</div>
+                                    {% elif choice.is_correct != 'True' and choice not in selected_ids %}
+                                        <div class="text">{{choice.choice_content}}</div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 </body>
