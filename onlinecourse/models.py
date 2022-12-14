@@ -109,19 +109,19 @@ class Question(models.Model):
     # question text
     question_text = models.TextField()
     # question grade/mark
-    A = 'A'
-    B = 'B'
-    C = 'C'
-    D = 'D'
-    E = 'E'
+    ONE = 1
+    TWO = 2
+    THREE = 3
+    FOUR = 4
+    FIVE = 5
     GRADES = [
-        (A, 'A'),
-        (B, 'B'),
-        (C, 'C'), 
-        (D, 'D'),
-        (E, 'E')
+        (ONE, 1),
+        (TWO, 2),
+        (THREE, 3), 
+        (FOUR, 4),
+        (FIVE, 5)
     ]
-    grade = models.CharField(max_length=1, choices=GRADES)
+    grade = models.IntegerField(choices=GRADES, verbose_name="Grade for all correct answers")
 
     # <HINT> A sample model method to calculate if learner get the score of the question
     def is_get_score(self, selected_ids):
@@ -131,7 +131,14 @@ class Question(models.Model):
            return True
        else:
            return False
-
+       
+    def __hash__(self) -> int:
+        return super().__hash__()
+       
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, type(self)):
+            return NotImplemented
+        return self.pk==other.pk and self.grade==other.grade and self.question_text==other.question_text and self.course==other.course and self.lesson==other.lesson
 
 #  <HINT> Create a Choice Model with:
     # Used to persist choice content for a question
@@ -144,13 +151,17 @@ class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     # lesson = models.ManyToManyField(Lesson)
     choice_content = models.TextField()
-    CORRECT = 'Correct'
-    INCORRECT = 'Incorrect'
+    CORRECT = 'True'
+    INCORRECT = 'False'
     IS_CORRECT = [
-        (CORRECT, True),
-        (INCORRECT, False)
+        (CORRECT, 'True'),
+        (INCORRECT, 'False')
     ]
-    is_correct = models.CharField(max_length=9, choices=IS_CORRECT)
+    is_correct = models.CharField(max_length=9, choices=IS_CORRECT, verbose_name="Is this correct answer?")
+    
+    def get_total_correct_choices_in_question(self):
+        """Calculates total number of correct answers in related question"""
+        return self.question.grade
 
 # <HINT> The submission model
 # One enrollment could have multiple submission
@@ -158,5 +169,5 @@ class Choice(models.Model):
 # One choice could belong to multiple submissions
 class Submission(models.Model):
    enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
-   choices = models.ManyToManyField(Choice)
+   choice = models.ManyToManyField(Choice)
 #    Other fields and methods you would like to design

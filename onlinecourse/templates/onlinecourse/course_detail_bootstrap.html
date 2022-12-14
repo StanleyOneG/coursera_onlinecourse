@@ -60,44 +60,52 @@
 
         
 <!-- Collapse button  ##################################################################################### -->
-            <div>
-                {% if user.is_authenticated %}            
-                    <p>
-                        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#exam" aria-expanded="false" aria-controls="collapse">
-                            Click to expand questions
-                        </button>
-                    </p> 
-                    <form id="questionform" action="" method="post">
-                            <div class="collapse" id="exam">
-                                <div class="card card-body">
-                                    {% for lesson in course.lesson_set.all %}
-                                    {% for question in lesson.question_set.all %}
-                                        <div class="card mt-1">
-                                            <div 
-                                                class="card-header">{{forloop.counter}}. <h6>{{question.question_text}}</h6>
-                                            </div> 
-                                            {% csrf_token %}
-                                            {% for choice in question.choice_set.all %}
-                                                <div class="form-group">
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">
-                                                            <input class="form-check-input" type="checkbox" value="{{choice.id}}" 
-                                                                    name="choice_{{choice.id}}" id="{{choice.id}}">
-                                                                        {{choice.choice_content}}
-                                                        </label>
-                                                    </div>
-                                                </div>    
-                                            {% endfor %}
+            <div class="card-body">
+                {% if user.is_authenticated %}      
+                    <div class="card-body">
+                        <p>
+                            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#exam" aria-expanded="false" aria-controls="collapse">
+                                Click to expand questions
+                            </button>
+                        </p> 
+                        <form class="form-inline" id="questionform" action="{% url 'onlinecourse:submit' course.id %}" method="post">
+                            {% csrf_token %}
+                                <div class="collapse" id="exam">
+                                    <div class="card card-body">
+                                        {% for lesson in course.lesson_set.all %}
+                                        {% for question in lesson.question_set.all %}
+                                            <div class="card mt-1">
+                                                <div 
+                                                    class="card-header">{{forloop.counter}}. <h6>{{question.question_text}}</h6>
+                                                </div> 
+                                                <div class="card-body">
+                                                    {% for choice in question.choice_set.all %}
+                                                        <div class="form-group">
+                                                            <div class="form-check container-fluid">
+                                                                <label class="form-check-label" for="choice">
+                                                                    <input class="form-check-input" type="checkbox" value="{{choice.id}}" 
+                                                                            name="choice_{{choice.id}}" id="{{choice.id}}">
+                                                                                {{choice.choice_content}}
+                                                                </label>
+                                                            </div>
+                                                        </div>    
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                        {% endfor %}
+                                        <div class="card-body">
+                                            <input class="btn btn-success btn-block" type="submit" value="Submit">
                                         </div>
-                                    {% endfor %}
-                                    {% endfor %}
-                                </div>
-                                <input class="btn btn-success btn-block" type="submit" value="Submit">
-                            </div>    
-                    </form>
+                                    </div>
+                                </div>    
+                        </form>
+                    </div>
                 {% else %}
                     <a class="btn btn-primary" href="{% url 'onlinecourse:login' %}" role="button" >
-                        Login or Sign up to see questions
+                        <div class="card-body">
+                            Login or Sign up to see questions
+                        </div>
                     </a> 
                 {% endif %}
 
