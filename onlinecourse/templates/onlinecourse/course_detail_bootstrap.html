@@ -75,8 +75,8 @@
                             {% csrf_token %}
                                 <div class="collapse" id="exam">
                                     <div class="card card-body">
-                                        {% for lesson in course.lesson_set.all %}
-                                        {% for question in lesson.question_set.all %}
+                                        {% comment %} {% for lesson in course.lesson_set.all %} {% endcomment %}
+                                        {% for question in course.question_set.all %}
                                             <div class="card mt-1">
                                                 <div 
                                                     class="card-header">{{forloop.counter}}. <h6>{{question.question_text}}</h6>
@@ -96,7 +96,7 @@
                                                 </div>
                                             </div>
                                         {% endfor %}
-                                        {% endfor %}
+                                        {% comment %} {% endfor %} {% endcomment %}
                                         <div class="card-body">
                                             <input class="btn btn-success btn-block" type="submit" value="Submit">
                                         </div>

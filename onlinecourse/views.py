@@ -152,6 +152,8 @@ def show_exam_result(request, course_id, submission_id):
             correct_answers += 1
         else:
             correct_answers -= 1
+    if correct_answers < 0:
+        correct_answers = 0
     max_possible_grade = sum([x.grade for x in questions])
     # max_possible_grade = sum([1 for x in choices if x.is_correct == 'True'])
     grade = round(correct_answers / max_possible_grade * 100)
